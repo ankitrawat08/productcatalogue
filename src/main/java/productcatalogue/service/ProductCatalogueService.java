@@ -18,9 +18,9 @@ public class ProductCatalogueService {
 	ProductCatalogueRepository productCatalogueRepository;
 
 	List<Product> products = new ArrayList<>(
-			Arrays.asList(new Product("shoes", "adidas", "adidas is a good shoe brand"),
-					new Product("electronics", "computer", "apple is a good computer electronic brand"),
-					new Product("clothes", "armani", "armani is a good clothing brand")));
+			Arrays.asList(new Product("shoes", "adidas", 10, 350, "Black", "adidas is a good shoe brand"),
+					new Product("electronics", "computer", 19, 800, null, "apple is a good computer electronic brand"),
+					new Product("clothes", "armani", 40, 150, "Yellow", "armani is a good clothing brand")));
 
 	public List<Product> getAllProducts() {
 		return products;
@@ -34,7 +34,7 @@ public class ProductCatalogueService {
 	}
 
 	public void editProduct(String id, Product product) throws ProductCatalogueException {
-		if (validateProduct(product) && validateId(id))
+		if (validateId(id) && validateProduct(product))
 			productCatalogueRepository.save(product);
 	}
 
@@ -50,10 +50,14 @@ public class ProductCatalogueService {
 	}
 
 	private boolean validateProduct(Product product) throws ProductCatalogueException {
-		if (wordCount(product.getDescription()) > 200) {
+		if (product.getDescription() == null || wordCount(product.getDescription()) > 200) {
 			throw new ProductCatalogueException("Length of the description cannot exceed 200 words");
-		} else if (product.getName().length() > 100) {
+		} else if (product.getName() == null || product.getName().length() > 100) {
 			throw new ProductCatalogueException("Product name should not exceed 100 characters");
+		} else if (product.getSize() <= 0) {
+			throw new ProductCatalogueException("Product size cannot be 0 or negative");
+		} else if (product.getWeight() <= 0) {
+			throw new ProductCatalogueException("Product weight cannot be 0 or negative");
 		} else
 			return validateId(product.id);
 	}

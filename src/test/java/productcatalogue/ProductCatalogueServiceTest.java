@@ -30,7 +30,15 @@ public class ProductCatalogueServiceTest {
 		String prodName = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 		thrown.expect(ProductCatalogueException.class);
 		thrown.expectMessage(startsWith("Product name should not exceed 100 characters"));
-		product = new Product("shoes", prodName, "adidas is a good shoebrand");
+		product = new Product("shoes", prodName, 10, 500, "Black", "adidas is a good shoe brand");
+		productCatalogueService.addProduct(product);
+	}
+
+	@Test()
+	public void testAddProductWithEmptyProductName() throws ProductCatalogueException {
+		thrown.expect(ProductCatalogueException.class);
+		thrown.expectMessage(startsWith("Product name should not exceed 100 characters"));
+		product = new Product("shoes", null, 10, 500, "Black", "adidas is a good shoe brand");
 		productCatalogueService.addProduct(product);
 	}
 
@@ -39,7 +47,15 @@ public class ProductCatalogueServiceTest {
 		String prodDescription = "a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a";
 		thrown.expect(ProductCatalogueException.class);
 		thrown.expectMessage(startsWith("Length of the description cannot exceed 200 words"));
-		product = new Product("shoes", "adidas", prodDescription);
+		product = new Product("shoes", "adidas", 10, 500, "Black", prodDescription);
+		productCatalogueService.addProduct(product);
+	}
+
+	@Test()
+	public void testAddProductWithEmptyProductDescription() throws ProductCatalogueException {
+		thrown.expect(ProductCatalogueException.class);
+		thrown.expectMessage(startsWith("Length of the description cannot exceed 200 words"));
+		product = new Product("shoes", "adidas", 10, 500, "Black", null);
 		productCatalogueService.addProduct(product);
 	}
 
@@ -47,7 +63,31 @@ public class ProductCatalogueServiceTest {
 	public void testAddProductWithInvalidProductId() throws ProductCatalogueException {
 		thrown.expect(ProductCatalogueException.class);
 		thrown.expectMessage(startsWith("Product id cannot be null/empty."));
-		product = new Product("", "adidas", "adidas is a good shoe brand");
+		product = new Product("", "adidas", 10, 500, "Black", "adidas is a good shoe brand");
+		productCatalogueService.addProduct(product);
+	}
+
+	@Test()
+	public void testAddProductWithEmptyProductId() throws ProductCatalogueException {
+		thrown.expect(ProductCatalogueException.class);
+		thrown.expectMessage(startsWith("Product id cannot be null/empty."));
+		product = new Product(null, "adidas", 10, 500, "Black", "adidas is a good shoe brand");
+		productCatalogueService.addProduct(product);
+	}
+
+	@Test()
+	public void testAddProductWithInvalidProductSize() throws ProductCatalogueException {
+		thrown.expect(ProductCatalogueException.class);
+		thrown.expectMessage(startsWith("Product size cannot be 0 or negative"));
+		product = new Product("shoes", "adidas", 0, 500, "Black", "adidas is a good shoe brand");
+		productCatalogueService.addProduct(product);
+	}
+
+	@Test()
+	public void testAddProductWithInvalidProductWeight() throws ProductCatalogueException {
+		thrown.expect(ProductCatalogueException.class);
+		thrown.expectMessage(startsWith("Product weight cannot be 0 or negative"));
+		product = new Product("shoes", "adidas", 10, 0, "Black", "adidas is a good shoe brand");
 		productCatalogueService.addProduct(product);
 	}
 
